@@ -1,2 +1,2 @@
-# vue-project
-Vue project is repository follow Vedocasts serie ( http://www.vedcasts.com.br/series/vuejs ) about VueJS 
+# Vue-project
+Vue project repository following the tutorial of the Vedocasts about VueJS.
