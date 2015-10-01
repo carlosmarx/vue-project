@@ -1,3 +1,13 @@
+Vue.filter('dateFormat', function (input, formatString)
+{
+  if(formatString != undefined){
+    return moment(input).format(formatString);
+  }
+  
+  return moment(input).format('DD/MM/YYYY');
+
+});
+
 new Vue({
 
   el: '#beerApp',
@@ -6,11 +16,17 @@ new Vue({
     cervejarias: [],
     openDetails: [],
     sortColumn: 'name',
-    sortInverse: false
+    sortInverse: false,
+    filterTerm: '',
 
   },
 
   methods:{
+    
+    doFilter: function(){
+      console.log(this.filterTerm);
+    },
+
     doSort: function(ev, column) {
       ev.preventDefault();
       var self = this;

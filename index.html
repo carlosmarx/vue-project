@@ -11,34 +11,64 @@
 
     <h1 class="page-header">Vue Project - Beer Api <i class="fa fa-beer"></i></h1>
 
-    <!-- <pre>{{ [$data.sortColumn, $data.sortInverse] | json }}</pre> -->
+    <!-- <pre>{{ $data.filterTerm | json }}</pre> -->
+
+    <div class="well">
+      <input
+      v-model="filterTerm"
+      v-on="keyup:doFilter"
+      type="text" 
+      class="form-control" 
+      placeholder="O que você procura?"
+      >
+    </div>
 
     <table class="table table-bordered table-hover table-striped">
       <thead>
         <tr>
 
           <th>
-          <i class="fa fa-fw fa-sort"></i>
+          <i class="fa fa-fw fa-sort" 
+          v-class="
+            fa-sort-asc:sortColumn == 'name' && sortInverse == false,
+            fa-sort-desc:sortColumn == 'name' && sortInverse == true
+          "></i>
           <a href="#" v-on="click:doSort($event, 'name')">Nome</a>
           </th>
 
           <th>
-          <i class="fa fa-fw fa-sort"></i>
+          <i class="fa fa-fw fa-sort" 
+          v-class="
+            fa-sort-asc:sortColumn == 'city' && sortInverse == false,
+            fa-sort-desc:sortColumn == 'city' && sortInverse == true
+          "></i>
           <a href="#" v-on="click:doSort($event, 'city')">Cidade</a>
           </th>
 
           <th>
-          <i class="fa fa-fw fa-sort"></i>
+          <i class="fa fa-fw fa-sort" 
+          v-class="
+            fa-sort-asc:sortColumn == 'state' && sortInverse == false,
+            fa-sort-desc:sortColumn == 'state' && sortInverse == true
+          "></i>
           <a href="#" v-on="click:doSort($event, 'state')">Estado</a>
           </th>
 
           <th>
-          <i class="fa fa-fw fa-sort"></i>
+          <i class="fa fa-fw fa-sort" 
+          v-class="
+            fa-sort-asc:sortColumn == 'country' && sortInverse == false,
+            fa-sort-desc:sortColumn == 'country' && sortInverse == true
+          "></i>
           <a href="#" v-on="click:doSort($event, 'country')">País</a>
           </th>
 
           <th>
-          <i class="fa fa-fw fa-sort"></i>
+          <i class="fa fa-fw fa-sort" 
+          v-class="
+            fa-sort-asc:sortColumn == 'last_mod' && sortInverse == false,
+            fa-sort-desc:sortColumn == 'last_mod' && sortInverse == true
+          "></i>
           <a href="#" v-on="click:doSort($event, 'last_mod')">Atualizado em</a>
           </th>
 
@@ -62,7 +92,7 @@
           <td>{{ cervejaria.city }}</td>
           <td>{{ cervejaria.state }}</td>
           <td>{{ cervejaria.country }}</td>
-          <td>{{ cervejaria.last_mod }}</td>
+          <td>{{ cervejaria.last_mod | dateFormat 'DD/MM/YYYY HH:mm:ss' }}</td>
           <td>
             <a href="#"
             v-show="cervejaria.descript != ''"
@@ -109,6 +139,7 @@
   <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>
   <script type="text/javascript" src="/node_modules/vue-resource/dist/vue-resource.js"></script>
+  <script type="text/javascript" src="/node_modules/moment/moment.js"></script>
   <script type="text/javascript" src="lodash.js"></script>
   <script type="text/javascript" src="app.js"></script>
 </body>
