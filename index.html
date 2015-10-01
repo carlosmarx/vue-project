@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Project</title>
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.css">
+</head>
+<body>
+  <div class="container" id="beerApp">
+
+    <h1 class="page-header">Vue Project - Beer Api <i class="fa fa-beer"></i></h1>
+
+    <!-- <pre>{{ [$data.sortColumn, $data.sortInverse] | json }}</pre> -->
+
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+
+          <th>
+          <i class="fa fa-fw fa-sort"></i>
+          <a href="#" v-on="click:doSort($event, 'name')">Nome</a>
+          </th>
+
+          <th>
+          <i class="fa fa-fw fa-sort"></i>
+          <a href="#" v-on="click:doSort($event, 'city')">Cidade</a>
+          </th>
+
+          <th>
+          <i class="fa fa-fw fa-sort"></i>
+          <a href="#" v-on="click:doSort($event, 'state')">Estado</a>
+          </th>
+
+          <th>
+          <i class="fa fa-fw fa-sort"></i>
+          <a href="#" v-on="click:doSort($event, 'country')">País</a>
+          </th>
+
+          <th>
+          <i class="fa fa-fw fa-sort"></i>
+          <a href="#" v-on="click:doSort($event, 'last_mod')">Atualizado em</a>
+          </th>
+
+          <th width="1%" nowrap>
+            <a href="#" v-on="click:openAllDetails">
+              <i class="fa"
+                v-class="
+                  fa-plus-square:openDetails.length == 0,
+                  fa-minus-square:openDetails.length > 0
+                ">
+                </i>
+            </a>
+          </th>
+
+        </tr>
+      </thead>
+
+      <tbody v-repeat="cervejaria:cervejarias | orderBy sortColumn sortInverse">
+        <tr>
+          <td>{{ cervejaria.name }}</td>
+          <td>{{ cervejaria.city }}</td>
+          <td>{{ cervejaria.state }}</td>
+          <td>{{ cervejaria.country }}</td>
+          <td>{{ cervejaria.last_mod }}</td>
+          <td>
+            <a href="#"
+            v-show="cervejaria.descript != ''"
+            v-on="click:doOpenDetails($event, cervejaria.id)">
+              <i class="fa"
+              v-class="
+                fa-plus-square:openDetails.indexOf(cervejaria.id) == -1,
+                fa-minus-square:openDetails.indexOf(cervejaria.id) > -1
+                ">
+                </i>
+            </a>
+
+            <i
+            class="fa fa-plus-square"
+            v-show="cervejaria.descript == ''"
+            style="opacity: 0.3"
+            ></i>
+          </td>
+        </tr>
+
+        <tr v-show="openDetails.indexOf(cervejaria.id) > -1 && cervejaria.descript != ''">
+          <td colspan="6">{{ cervejaria.descript }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
+  <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+  <script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>
+  <script type="text/javascript" src="/node_modules/vue-resource/dist/vue-resource.js"></script>
+  <script type="text/javascript" src="lodash.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

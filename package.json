@@ -1,0 +1,25 @@
+{
+  "name": "VueProject",
+  "version": "1.0.0",
+  "description": "Vue project repository following the tutorial of the Vedocasts about VueJS [Link here](http://www.vedcasts.com.br/series/vuejs).",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carlosmarx/vue-project.git"
+  },
+  "author": "Carlos Marx",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carlosmarx/vue-project/issues"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.5",
+    "font-awesome": "^4.4.0",
+    "jquery": "^2.1.4",
+    "vue": "^0.12.16",
+    "vue-resource": "^0.1.16"
+  }
+}
