@@ -12,142 +12,157 @@
 
     <h1 class="page-header">Vue Project - Beer Api <i class="fa fa-beer"></i></h1>
 
-    <!-- <pre>{{ $data.columnsToFilter | json }}</pre> -->
-
-    <div class="well">
-      <div class="row">
-        <div class="col-md-6">
-          <input
-            v-model="filterTerm"
-            v-on="keyup:doFilter"
-            type="text" 
-            class="form-control" 
-            placeholder="O que você procura?"
-          >
-        </div>
-
-        <div class="col-md-6">
+    <pre>{{ $data.visibleColumns | json }}</pre>
+    <div class="row">
+      <div class="col-md-2">
+          <label>Colunas para exibir: </label>
           <select 
-            v-model="columnsToFilter"
-            v-el="columnsToFilterSelect"
+            v-model="visibleColumns"
             multiple 
             class="form-control"
-          >
+            >
             
             <option value="name">Nome</option>
             <option value="city">Cidade</option>
             <option value="state">Estado</option>
             <option value="country">País</option>
-
+            <option value="last_mod">Atualizado em</option>
           </select>
-        </div>  
       </div>
-    </div>
 
-    <table class="table table-bordered table-hover table-striped">
-      <thead>
-        <tr>
+      <div class="col-md-10">
+          <div class="well">
+            <div class="row">
+              <div class="col-md-6">
+                <input
+                v-model="filterTerm"
+                v-on="keyup:doFilter"
+                type="text" 
+                class="form-control" 
+                placeholder="O que você procura?"
+                >
+              </div>
 
-          <th>
-          <i class="fa fa-fw fa-sort" 
-          v-class="
-            fa-sort-asc:sortColumn == 'name' && sortInverse == false,
-            fa-sort-desc:sortColumn == 'name' && sortInverse == true
-          "></i>
-          <a href="#" v-on="click:doSort($event, 'name')">Nome</a>
-          </th>
+              <div class="col-md-6">
+                <select 
+                v-model="columnsToFilter"
+                v-el="columnsToFilterSelect"
+                multiple 
+                class="form-control"
+                >
 
-          <th>
-          <i class="fa fa-fw fa-sort" 
-          v-class="
-            fa-sort-asc:sortColumn == 'city' && sortInverse == false,
-            fa-sort-desc:sortColumn == 'city' && sortInverse == true
-          "></i>
-          <a href="#" v-on="click:doSort($event, 'city')">Cidade</a>
-          </th>
+                <option value="name">Nome</option>
+                <option value="city">Cidade</option>
+                <option value="state">Estado</option>
+                <option value="country">País</option>
 
-          <th>
-          <i class="fa fa-fw fa-sort" 
-          v-class="
-            fa-sort-asc:sortColumn == 'state' && sortInverse == false,
-            fa-sort-desc:sortColumn == 'state' && sortInverse == true
-          "></i>
-          <a href="#" v-on="click:doSort($event, 'state')">Estado</a>
-          </th>
+              </select>
+            </div>  
+          </div>
+        </div>
 
-          <th>
-          <i class="fa fa-fw fa-sort" 
-          v-class="
-            fa-sort-asc:sortColumn == 'country' && sortInverse == false,
-            fa-sort-desc:sortColumn == 'country' && sortInverse == true
-          "></i>
-          <a href="#" v-on="click:doSort($event, 'country')">País</a>
-          </th>
+        <table class="table table-bordered table-hover table-striped">
+          <thead>
+            <tr>
 
-          <th>
-          <i class="fa fa-fw fa-sort" 
-          v-class="
-            fa-sort-asc:sortColumn == 'last_mod' && sortInverse == false,
-            fa-sort-desc:sortColumn == 'last_mod' && sortInverse == true
-          "></i>
-          <a href="#" v-on="click:doSort($event, 'last_mod')">Atualizado em</a>
-          </th>
-
-          <th width="1%" nowrap>
-            <a href="#" v-on="click:openAllDetails">
-              <i class="fa"
+              <th v-show="visibleColumns.indexOf('name') > -1">
+                <i class="fa fa-fw fa-sort" 
                 v-class="
+                fa-sort-asc:sortColumn == 'name' && sortInverse == false,
+                fa-sort-desc:sortColumn == 'name' && sortInverse == true
+                "></i>
+                <a href="#" v-on="click:doSort($event, 'name')">Nome</a>
+              </th>
+
+              <th v-show="visibleColumns.indexOf('city') > -1">
+                <i class="fa fa-fw fa-sort" 
+                v-class="
+                fa-sort-asc:sortColumn == 'city' && sortInverse == false,
+                fa-sort-desc:sortColumn == 'city' && sortInverse == true
+                "></i>
+                <a href="#" v-on="click:doSort($event, 'city')">Cidade</a>
+              </th>
+
+              <th v-show="visibleColumns.indexOf('state') > -1">
+                <i class="fa fa-fw fa-sort" 
+                v-class="
+                fa-sort-asc:sortColumn == 'state' && sortInverse == false,
+                fa-sort-desc:sortColumn == 'state' && sortInverse == true
+                "></i>
+                <a href="#" v-on="click:doSort($event, 'state')">Estado</a>
+              </th>
+
+              <th v-show="visibleColumns.indexOf('country') > -1">
+                <i class="fa fa-fw fa-sort" 
+                v-class="
+                fa-sort-asc:sortColumn == 'country' && sortInverse == false,
+                fa-sort-desc:sortColumn == 'country' && sortInverse == true
+                "></i>
+                <a href="#" v-on="click:doSort($event, 'country')">País</a>
+              </th>
+
+              <th v-show="visibleColumns.indexOf('last_mod') > -1">
+                <i class="fa fa-fw fa-sort" 
+                v-class="
+                fa-sort-asc:sortColumn == 'last_mod' && sortInverse == false,
+                fa-sort-desc:sortColumn == 'last_mod' && sortInverse == true
+                "></i>
+                <a href="#" v-on="click:doSort($event, 'last_mod')">Atualizado em</a>
+              </th>
+
+              <th width="1%" nowrap>
+                <a href="#" v-on="click:openAllDetails">
+                  <i class="fa"
+                  v-class="
                   fa-plus-square:openDetails.length == 0,
                   fa-minus-square:openDetails.length > 0
-                ">
+                  ">
                 </i>
-            </a>
-          </th>
+              </a>
+            </th>
 
-        </tr>
-      </thead>
+          </tr>
+        </thead>
 
-      <tbody v-repeat="cervejaria:cervejarias | orderBy sortColumn sortInverse">
-        <tr>
-          <td>{{ cervejaria.name }}</td>
-          <td>{{ cervejaria.city }}</td>
-          <td>{{ cervejaria.state }}</td>
-          <td>{{ cervejaria.country }}</td>
-          <td>{{ cervejaria.last_mod | dateFormat 'DD/MM/YYYY HH:mm:ss' }}</td>
-          <td>
-            <a href="#"
-            v-show="cervejaria.descript != ''"
-            v-on="click:doOpenDetails($event, cervejaria.id)">
+        <tbody v-repeat="cervejaria:cervejarias | orderBy sortColumn sortInverse">
+          <tr>
+            <td v-show="visibleColumns.indexOf('name') > -1">{{ cervejaria.name }}</td>
+            <td v-show="visibleColumns.indexOf('city') > -1">{{ cervejaria.city }}</td>
+            <td v-show="visibleColumns.indexOf('state') > -1">{{ cervejaria.state }}</td>
+            <td v-show="visibleColumns.indexOf('country') > -1">{{ cervejaria.country }}</td>
+            <td v-show="visibleColumns.indexOf('last_mod') > -1">{{ cervejaria.last_mod | dateFormat 'DD/MM/YYYY HH:mm:ss' }}</td>
+            <td>
+              <a href="#"
+              v-show="cervejaria.descript != ''"
+              v-on="click:doOpenDetails($event, cervejaria.id)">
               <i class="fa"
               v-class="
-                fa-plus-square:openDetails.indexOf(cervejaria.id) == -1,
-                fa-minus-square:openDetails.indexOf(cervejaria.id) > -1
-                ">
-                </i>
-            </a>
+              fa-plus-square:openDetails.indexOf(cervejaria.id) == -1,
+              fa-minus-square:openDetails.indexOf(cervejaria.id) > -1
+              ">
+            </i>
+          </a>
 
-            <i
-            class="fa fa-plus-square"
-            v-show="cervejaria.descript == ''"
-            style="opacity: 0.3"
-            ></i>
-          </td>
-        </tr>
+          <i
+          class="fa fa-plus-square"
+          v-show="cervejaria.descript == ''"
+          style="opacity: 0.3"
+          ></i>
+        </td>
+      </tr>
 
-        <tr v-show="openDetails.indexOf(cervejaria.id) > -1 && cervejaria.descript != ''">
-          <td colspan="6">{{ cervejaria.descript }}</td>
-        </tr>
+      <tr v-show="openDetails.indexOf(cervejaria.id) > -1 && cervejaria.descript != ''">
+        <td colspan="6">{{ cervejaria.descript }}</td>
+      </tr>
 
-      </tbody>
-    </table>
-  </div>
-
-
-
+    </tbody>
+  </table>
+</div>
+</div>
 
 
 
-
+</div> <!-- End container -->
 
 
 
@@ -156,13 +171,20 @@
 
 
 
-  <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
-  <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
-  <script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>
-  <script type="text/javascript" src="/node_modules/vue-resource/dist/vue-resource.js"></script>
-  <script type="text/javascript" src="/node_modules/moment/moment.js"></script>
-  <script type="text/javascript" src="/node_modules/select2/dist/js/select2.js"></script>
-  <script type="text/javascript" src="lodash.js"></script>
-  <script type="text/javascript" src="app.js"></script>
+
+
+
+
+
+
+
+<script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript" src="/node_modules/vue-resource/dist/vue-resource.js"></script>
+<script type="text/javascript" src="/node_modules/moment/moment.js"></script>
+<script type="text/javascript" src="/node_modules/select2/dist/js/select2.js"></script>
+<script type="text/javascript" src="lodash.js"></script>
+<script type="text/javascript" src="app.js"></script>
 </body>
 </html>

@@ -14,6 +14,7 @@ new Vue({
 
   data:{
     columnsToFilter: [],
+    visibleColumns: ['name', 'last_mod'],
     cervejarias: [],
     todasCervejarias: [],
     openDetails: [],
