@@ -13,7 +13,9 @@ new Vue({
   el: '#beerApp',
 
   data:{
+    columnsToFilter: [],
     cervejarias: [],
+    todasCervejarias: [],
     openDetails: [],
     sortColumn: 'name',
     sortInverse: false,
@@ -24,12 +26,32 @@ new Vue({
   methods:{
     
     doFilter: function(){
-      console.log(this.filterTerm);
+    
+      var self = this,
+      columnsToFilter = [],
+      filtered = self.todasCervejarias;
+
+      if(self.filterTerm != '' && self.columnsToFilter.length > 0)
+      {
+       
+        filtered = _.filter(self.todasCervejarias, function(cervejaria)
+        {
+
+          return self.columnsToFilter.some(function(column)
+          {
+            return cervejaria[column].toLowerCase().indexOf(self.filterTerm.toLowerCase()) > -1
+          });
+
+        });
+      
+      }
+      
+      self.$set('cervejarias', filtered);
     },
 
     doSort: function(ev, column) {
       ev.preventDefault();
-      var self = this;
+      var self        = this;
       self.sortColumn = column;
       self.$set('sortInverse', !self.sortInverse);
     },
@@ -76,8 +98,16 @@ new Vue({
     var self = this;
 
     self.$http.get('http://beerapi.local/cervejarias', function (response) {
-      self.cervejarias = response;
-    })
+      self.$set('cervejarias', response);
+      self.$set('todasCervejarias', response);
+    });
+
+    jQuery(self.$$.columnsToFilterSelect).select2({
+      placeholder: 'Selecione uma ou mais colunas para filtrar!'
+    }).on('change', function() {
+      // Here "this" is reference to CustomToFilterSelect
+      self.$set('columnsToFilter', jQuery(this).val());
+    });
 
   }
 

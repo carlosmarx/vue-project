@@ -5,22 +5,43 @@
   <title>Vue Project</title>
   <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/node_modules/select2/dist/css/select2.css">
 </head>
 <body>
   <div class="container" id="beerApp">
 
     <h1 class="page-header">Vue Project - Beer Api <i class="fa fa-beer"></i></h1>
 
-    <!-- <pre>{{ $data.filterTerm | json }}</pre> -->
+    <!-- <pre>{{ $data.columnsToFilter | json }}</pre> -->
 
     <div class="well">
-      <input
-      v-model="filterTerm"
-      v-on="keyup:doFilter"
-      type="text" 
-      class="form-control" 
-      placeholder="O que você procura?"
-      >
+      <div class="row">
+        <div class="col-md-6">
+          <input
+            v-model="filterTerm"
+            v-on="keyup:doFilter"
+            type="text" 
+            class="form-control" 
+            placeholder="O que você procura?"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <select 
+            v-model="columnsToFilter"
+            v-el="columnsToFilterSelect"
+            multiple 
+            class="form-control"
+          >
+            
+            <option value="name">Nome</option>
+            <option value="city">Cidade</option>
+            <option value="state">Estado</option>
+            <option value="country">País</option>
+
+          </select>
+        </div>  
+      </div>
     </div>
 
     <table class="table table-bordered table-hover table-striped">
@@ -140,6 +161,7 @@
   <script type="text/javascript" src="/node_modules/vue/dist/vue.js"></script>
   <script type="text/javascript" src="/node_modules/vue-resource/dist/vue-resource.js"></script>
   <script type="text/javascript" src="/node_modules/moment/moment.js"></script>
+  <script type="text/javascript" src="/node_modules/select2/dist/js/select2.js"></script>
   <script type="text/javascript" src="lodash.js"></script>
   <script type="text/javascript" src="app.js"></script>
 </body>
