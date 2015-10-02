@@ -13,6 +13,7 @@ new Vue({
   el: '#beerApp',
 
   data:{
+    select2: null,
     columnsToFilter: [],
     visibleColumns: ['name', 'last_mod'],
     cervejarias: [],
@@ -25,6 +26,21 @@ new Vue({
   },
 
   methods:{
+
+    doResetAll: function()
+    {
+      self = this;
+
+      self.$set('visibleColumns', ['name', 'last_mod']);
+      self.$set('columnsToFilter', []);
+      self.$set('filterTerm', '');
+      self.$set('cervejarias', self.todasCervejarias);
+      self.$set('openDetails', []);
+      self.$set('sortColumn', 'name');
+      self.$set('sortInverse', false);
+
+      self.select2.val('').trigger('change') 
+    },
     
     doFilter: function(){
     
@@ -103,7 +119,7 @@ new Vue({
       self.$set('todasCervejarias', response);
     });
 
-    jQuery(self.$$.columnsToFilterSelect).select2({
+    self.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
       placeholder: 'Selecione uma ou mais colunas para filtrar!'
     }).on('change', function() {
       // Here "this" is reference to CustomToFilterSelect
