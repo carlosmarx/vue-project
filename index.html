@@ -12,12 +12,13 @@
 
     <h1 class="page-header">Vue Project - Beer Api <i class="fa fa-beer"></i></h1>
 
-    <pre>{{ $data.visibleColumns | json }}</pre>
+    <!-- <pre>{{ $data.interaction.visibleColumns | json }}</pre> -->
+
     <div class="row">
       <div class="col-md-2">
           <label>Colunas para exibir: </label>
           <select 
-            v-model="visibleColumns"
+            v-model="interaction.visibleColumns"
             multiple 
             class="form-control"
             >
@@ -37,7 +38,7 @@
             <div class="row">
               <div class="col-md-6">
                 <input
-                v-model="filterTerm"
+                v-model="interaction.filterTerm"
                 v-on="keyup:doFilter"
                 type="text" 
                 class="form-control" 
@@ -67,47 +68,47 @@
           <thead>
             <tr>
 
-              <th v-show="visibleColumns.indexOf('name') > -1">
+              <th v-show="interaction.visibleColumns.indexOf('name') > -1">
                 <i class="fa fa-fw fa-sort" 
                 v-class="
-                fa-sort-asc:sortColumn == 'name' && sortInverse == false,
-                fa-sort-desc:sortColumn == 'name' && sortInverse == true
+                fa-sort-asc:interaction.sortColumn == 'name' && interaction.sortInverse == false,
+                fa-sort-desc:interaction.sortColumn == 'name' && interaction.sortInverse == true
                 "></i>
                 <a href="#" v-on="click:doSort($event, 'name')">Nome</a>
               </th>
 
-              <th v-show="visibleColumns.indexOf('city') > -1">
+              <th v-show="interaction.visibleColumns.indexOf('city') > -1">
                 <i class="fa fa-fw fa-sort" 
                 v-class="
-                fa-sort-asc:sortColumn == 'city' && sortInverse == false,
-                fa-sort-desc:sortColumn == 'city' && sortInverse == true
+                fa-sort-asc:interaction.sortColumn == 'city' && interaction.sortInverse == false,
+                fa-sort-desc:interaction.sortColumn == 'city' && interaction.sortInverse == true
                 "></i>
                 <a href="#" v-on="click:doSort($event, 'city')">Cidade</a>
               </th>
 
-              <th v-show="visibleColumns.indexOf('state') > -1">
+              <th v-show="interaction.visibleColumns.indexOf('state') > -1">
                 <i class="fa fa-fw fa-sort" 
                 v-class="
-                fa-sort-asc:sortColumn == 'state' && sortInverse == false,
-                fa-sort-desc:sortColumn == 'state' && sortInverse == true
+                fa-sort-asc:interaction.sortColumn == 'state' && interaction.sortInverse == false,
+                fa-sort-desc:interaction.sortColumn == 'state' && interaction.sortInverse == true
                 "></i>
                 <a href="#" v-on="click:doSort($event, 'state')">Estado</a>
               </th>
 
-              <th v-show="visibleColumns.indexOf('country') > -1">
+              <th v-show="interaction.visibleColumns.indexOf('country') > -1">
                 <i class="fa fa-fw fa-sort" 
                 v-class="
-                fa-sort-asc:sortColumn == 'country' && sortInverse == false,
-                fa-sort-desc:sortColumn == 'country' && sortInverse == true
+                fa-sort-asc:interaction.sortColumn == 'country' && interaction.sortInverse == false,
+                fa-sort-desc:interaction.sortColumn == 'country' && interaction.sortInverse == true
                 "></i>
                 <a href="#" v-on="click:doSort($event, 'country')">País</a>
               </th>
 
-              <th v-show="visibleColumns.indexOf('last_mod') > -1">
+              <th v-show="interaction.visibleColumns.indexOf('last_mod') > -1">
                 <i class="fa fa-fw fa-sort" 
                 v-class="
-                fa-sort-asc:sortColumn == 'last_mod' && sortInverse == false,
-                fa-sort-desc:sortColumn == 'last_mod' && sortInverse == true
+                fa-sort-asc:interaction.sortColumn == 'last_mod' && interaction.sortInverse == false,
+                fa-sort-desc:interaction.sortColumn == 'last_mod' && interaction.sortInverse == true
                 "></i>
                 <a href="#" v-on="click:doSort($event, 'last_mod')">Atualizado em</a>
               </th>
@@ -116,8 +117,8 @@
                 <a href="#" v-on="click:openAllDetails">
                   <i class="fa"
                   v-class="
-                  fa-plus-square:openDetails.length == 0,
-                  fa-minus-square:openDetails.length > 0
+                  fa-plus-square:interaction.openDetails.length == 0,
+                  fa-minus-square:interaction.openDetails.length > 0
                   ">
                 </i>
               </a>
@@ -126,21 +127,21 @@
           </tr>
         </thead>
 
-        <tbody v-repeat="cervejaria:cervejarias | orderBy sortColumn sortInverse">
+        <tbody v-repeat="cervejaria:cervejarias.listaCervejarias | orderBy interaction.sortColumn interaction.sortInverse">
           <tr>
-            <td v-show="visibleColumns.indexOf('name') > -1">{{ cervejaria.name }}</td>
-            <td v-show="visibleColumns.indexOf('city') > -1">{{ cervejaria.city }}</td>
-            <td v-show="visibleColumns.indexOf('state') > -1">{{ cervejaria.state }}</td>
-            <td v-show="visibleColumns.indexOf('country') > -1">{{ cervejaria.country }}</td>
-            <td v-show="visibleColumns.indexOf('last_mod') > -1">{{ cervejaria.last_mod | dateFormat 'DD/MM/YYYY HH:mm:ss' }}</td>
+            <td v-show="interaction.visibleColumns.indexOf('name') > -1">{{ cervejaria.name }}</td>
+            <td v-show="interaction.visibleColumns.indexOf('city') > -1">{{ cervejaria.city }}</td>
+            <td v-show="interaction.visibleColumns.indexOf('state') > -1">{{ cervejaria.state }}</td>
+            <td v-show="interaction.visibleColumns.indexOf('country') > -1">{{ cervejaria.country }}</td>
+            <td v-show="interaction.visibleColumns.indexOf('last_mod') > -1">{{ cervejaria.last_mod | dateFormat 'DD/MM/YYYY HH:mm:ss' }}</td>
             <td>
               <a href="#"
               v-show="cervejaria.descript != ''"
               v-on="click:doOpenDetails($event, cervejaria.id)">
               <i class="fa"
               v-class="
-              fa-plus-square:openDetails.indexOf(cervejaria.id) == -1,
-              fa-minus-square:openDetails.indexOf(cervejaria.id) > -1
+              fa-plus-square:interaction.openDetails.indexOf(cervejaria.id) == -1,
+              fa-minus-square:interaction.openDetails.indexOf(cervejaria.id) > -1
               ">
             </i>
           </a>
@@ -153,12 +154,20 @@
         </td>
       </tr>
 
-      <tr v-show="openDetails.indexOf(cervejaria.id) > -1 && cervejaria.descript != ''">
+      <tr v-show="interaction.openDetails.indexOf(cervejaria.id) > -1 && cervejaria.descript != ''">
         <td colspan="6">{{ cervejaria.descript }}</td>
       </tr>
 
     </tbody>
   </table>
+
+  <p class="text-center">
+    [ <a href="#" v-on="click:previous">Anterior</a> |
+    <a href="#" v-on="click:next">Próxima</a> ]
+  </p>
+
+  <pre>{{ $data.pagination | json }}</pre>
+
 </div>
 </div>
 

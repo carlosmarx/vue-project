@@ -13,82 +13,122 @@ new Vue({
   el: '#beerApp',
 
   data:{
-    select2: null,
-    columnsToFilter: [],
-    visibleColumns: ['name', 'last_mod'],
-    cervejarias: [],
-    todasCervejarias: [],
-    openDetails: [],
-    sortColumn: 'name',
-    sortInverse: false,
-    filterTerm: '',
+    cervejarias:  {
+      todasCervejarias:   [],
+      listaCervejarias:   []
+    },
 
+    pagination:   {
+      currentPage: 1,
+      totalPages: 0,
+      totalItems: 0,
+      pageNumbers: []
+    },
+
+    interaction:  {
+      visibleColumns: ['name', 'last_mod'],
+      columnsToFilter: [],
+      filterTerm: '',
+      openDetails: [],
+      sortColumn: 'name',
+      sortInverse: false,
+    },
+
+    controls:     {
+      select2: null
+    }
   },
 
   methods:{
 
-    doResetAll: function()
-    {
+    page: function(ev, page){
+      // body...
+    },
+
+    next: function(ev){
+
+      ev.preventDefault();
+
+      var self = this;
+
+      self.pagination.$set('currentPage', self.pagination.currentPage+1);
+    
+    },
+
+    previous: function(ev){
+
+      ev.preventDefault();
+
+      var self = this;
+
+      self.pagination.$set('currentPage', self.pagination.currentPage-1);
+    
+    },
+
+    doResetAll: function(){
       self = this;
 
-      self.$set('visibleColumns', ['name', 'last_mod']);
-      self.$set('columnsToFilter', []);
-      self.$set('filterTerm', '');
-      self.$set('cervejarias', self.todasCervejarias);
-      self.$set('openDetails', []);
-      self.$set('sortColumn', 'name');
-      self.$set('sortInverse', false);
+      self.interaction.$set('visibleColumns', ['name', 'last_mod']);
+      self.interaction.$set('columnsToFilter', []);
+      self.interaction.$set('filterTerm', '');
+      self.cervejarias.$set('listaCervejarias', self.cervejarias.todasCervejarias);
+      self.interaction.$set('openDetails', []);
+      self.interaction.$set('sortColumn', 'name');
+      self.interaction.$set('sortInverse', false);
 
-      self.select2.val('').trigger('change') 
+      self.controls.select2.val('').trigger('change') 
     },
     
     doFilter: function(){
     
       var self = this,
-      columnsToFilter = [],
-      filtered = self.todasCervejarias;
+      // columnsToFilter = [],
+      filtered = self.cervejarias.todasCervejarias;
 
-      if(self.filterTerm != '' && self.columnsToFilter.length > 0)
+      if(self.interaction.filterTerm != '' && self.interaction.columnsToFilter.length > 0)
       {
        
-        filtered = _.filter(self.todasCervejarias, function(cervejaria)
+        filtered = _.filter(self.cervejarias.todasCervejarias, function(cervejaria)
         {
 
-          return self.columnsToFilter.some(function(column)
+          return self.interaction.columnsToFilter.some(function(column)
           {
-            return cervejaria[column].toLowerCase().indexOf(self.filterTerm.toLowerCase()) > -1
+            return cervejaria[column].toLowerCase().indexOf(self.interaction.filterTerm.toLowerCase()) > -1
           });
 
         });
       
       }
       
-      self.$set('cervejarias', filtered);
+      self.cervejarias.$set('listaCervejarias', filtered);
     },
 
-    doSort: function(ev, column) {
+    doSort: function(ev, column){
       ev.preventDefault();
+
       var self        = this;
-      self.sortColumn = column;
-      self.$set('sortInverse', !self.sortInverse);
+
+      self.interaction.sortColumn = column;
+
+      self.interaction.$set('sortInverse', !self.interaction.sortInverse);
     },
 
-    doOpenDetails: function(ev, id) {
+    doOpenDetails: function(ev, id){
       ev.preventDefault();
 
       var self = this;
 
-      index = self.openDetails.indexOf(id);
+      index = self.interaction.openDetails.indexOf(id);
 
       if(index > -1){
-        self.openDetails.$remove(index);
+        self.interaction.openDetails.$remove(index);
       }
       else{
-        self.openDetails.push(id);
+        self.interaction.openDetails.push(id);
       }
     },
 
-    openAllDetails: function(ev) {
+    openAllDetails: function(ev){
 
       ev.preventDefault();
 
@@ -99,33 +139,33 @@ new Vue({
       //   ids.push(cervejaria.id);
       // });
 
-        if(self.openDetails.length > 0){
-          self.$set('openDetails', []);
+        if(self.interaction.openDetails.length > 0){
+          self.interaction.$set('openDetails', []);
         }
         else{
-          self.$set('openDetails', _.pluck(self.cervejarias, 'id'));
+          self.interaction.$set('openDetails', _.pluck(self.cervejarias.listaCervejarias, 'id'));
         }
       }
-
   },
 
 
-  ready: function()
-  {
+  ready: function(){
     var self = this;
 
     self.$http.get('http://beerapi.local/cervejarias', function (response) {
-      self.$set('cervejarias', response);
-      self.$set('todasCervejarias', response);
+      self.cervejarias.$set('listaCervejarias', response);
+      self.cervejarias.$set('todasCervejarias', response);
+      
+      self.pagination.$set('totalItems', response.length);
+      
     });
 
-    self.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
+    self.controls.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
       placeholder: 'Selecione uma ou mais colunas para filtrar!'
     }).on('change', function() {
       // Here "this" is reference to CustomToFilterSelect
-      self.$set('columnsToFilter', jQuery(this).val());
+      self.interaction.$set('columnsToFilter', jQuery(this).val());
     });
-
   }
 
 });
