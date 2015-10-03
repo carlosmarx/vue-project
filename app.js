@@ -44,7 +44,12 @@ new Vue({
   methods:{
 
     page: function(ev, page){
-      // body...
+       ev.preventDefault();
+       var self = this;
+
+       self.pagination.$set('currentPage', page);
+
+      self.cervejarias.$set('listaCervejarias', self.cervejarias.paginated[page-1]);
     },
 
     next: function(ev){
@@ -180,6 +185,7 @@ new Vue({
       self.pagination.$set('totalItems', response.length);
       self.pagination.$set('totalPages', Math.ceil(response.length / self.pagination.perPage));
       //Math.ceil arredondamento para o maior
+      self.pagination.$set('pageNumbers', _.range(1, self.pagination.totalPages+1));
     });
 
     self.controls.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
