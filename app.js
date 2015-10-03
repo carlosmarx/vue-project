@@ -20,7 +20,7 @@ new Vue({
     },
 
     pagination:   {
-      perPage: 6,
+      perPage: 10,
       currentPage: 1,
       totalPages: 0,
       totalItems: 0,
