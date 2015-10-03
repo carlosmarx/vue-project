@@ -13,6 +13,14 @@ new Vue({
   el: '#beerApp',
 
   data:{
+    cervejaria:{
+      name: '',
+      city: '',
+      state: '',
+      country: '',
+      descript: ''
+    },
+
     cervejarias:  {
       todasCervejarias:   [],
       listaCervejarias:   [],
@@ -20,7 +28,7 @@ new Vue({
     },
 
     pagination:   {
-      perPage: 10,
+      perPage: 8,
       currentPage: 1,
       totalPages: 0,
       totalItems: 0,
@@ -42,6 +50,49 @@ new Vue({
   },
 
   methods:{
+
+    new: function () {
+      this.cervejaria.name = '';
+      this.cervejaria.city = '';
+      this.cervejaria.state = '';
+      this.cervejaria.country = '';
+      this.cervejaria.descript = '';
+      
+      jQuery(this.$$.modal).modal('show');
+    },
+
+    edit: function (ev, cervejaria) {
+      ev.preventDefault();
+      this.$set('cervejaria', cervejaria);
+      jQuery(this.$$.modal).modal('show');
+    },
+
+    save: function(ev) {
+      ev.preventDefault();
+
+      // this.$http.post('url/save', cervejaria, function(response) {
+      //   jQuery(this.$$.modal).modal('hide');
+      //   window.alert('Cervejaria salva, seu bebâdo');
+      // });
+      
+      jQuery(this.$$.modal).modal('hide');
+      window.console.log(JSON.stringify(this.cervejaria));
+      window.alert('Cervejaria salva, seu bebâdo');
+    },
+
+    setPaginationData: function(listaCervejarias) {
+      var self = this;
+      chunk    = _.chunk(listaCervejarias, self.pagination.perPage);
+
+      self.cervejarias.$set('paginated', chunk);
+      self.cervejarias.$set('listaCervejarias', chunk[0]);
+
+      self.pagination.$set('currentPage', 1);
+      self.pagination.$set('totalItems', listaCervejarias.length);
+      self.pagination.$set('totalPages', Math.ceil(listaCervejarias.length / self.pagination.perPage));
+      //Math.ceil arredondamento para o maior
+      self.pagination.$set('pageNumbers', _.range(1, self.pagination.totalPages+1));
+    },
 
     page: function(ev, page){
        ev.preventDefault();
@@ -90,10 +141,12 @@ new Vue({
       self.interaction.$set('visibleColumns', ['name', 'last_mod']);
       self.interaction.$set('columnsToFilter', []);
       self.interaction.$set('filterTerm', '');
-      self.cervejarias.$set('listaCervejarias', self.cervejarias.todasCervejarias);
+      // self.cervejarias.$set('listaCervejarias', self.cervejarias.todasCervejarias);
       self.interaction.$set('openDetails', []);
       self.interaction.$set('sortColumn', 'name');
       self.interaction.$set('sortInverse', false);
+
+      self.setPaginationData(self.cervejarias.todasCervejarias);
 
       self.controls.select2.val('').trigger('change') 
     },
@@ -119,7 +172,9 @@ new Vue({
       
       }
       
-      self.cervejarias.$set('listaCervejarias', filtered);
+      // self.cervejarias.$set('listaCervejarias', filtered);
+      
+      self.setPaginationData(filtered);
     },
 
     doSort: function(ev, column){
@@ -170,22 +225,11 @@ new Vue({
   ready: function(){
     var self = this;
 
-    self.$http.get('http://beerapi.local/cervejarias', function (response) {
-      
-      var chunk;
-
-      chunk = _.chunk(response, self.pagination.perPage);
-
-      console.log(chunk);
-
-      self.cervejarias.$set('paginated', chunk);
+    self.$http.get('http://beerapi.local/cervejarias', function (response)
+    {
       self.cervejarias.$set('todasCervejarias', response);
-      self.cervejarias.$set('listaCervejarias', chunk[0]);
-
-      self.pagination.$set('totalItems', response.length);
-      self.pagination.$set('totalPages', Math.ceil(response.length / self.pagination.perPage));
-      //Math.ceil arredondamento para o maior
-      self.pagination.$set('pageNumbers', _.range(1, self.pagination.totalPages+1));
+      
+      self.setPaginationData(response);
     });
 
     self.controls.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
