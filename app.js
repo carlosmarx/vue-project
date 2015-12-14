@@ -204,7 +204,7 @@ new Vue({
       index = self.interaction.openDetails.indexOf(id);
 
       if(index > -1){
-        self.interaction.openDetails.$remove(index);
+        self.interaction.openDetails.$remove(id);
       }
       else{
         self.interaction.openDetails.push(id);
