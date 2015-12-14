@@ -41,7 +41,7 @@ new Vue({
       filterTerm: '',
       openDetails: [],
       sortColumn: 'name',
-      sortInverse: false,
+      sortInverse: 0,
     },
 
     controls:     {
@@ -58,24 +58,25 @@ new Vue({
       this.cervejaria.country = '';
       this.cervejaria.descript = '';
       
-      jQuery(this.$$.modal).modal('show');
+      jQuery(this.$els.modal).modal('show');
     },
 
     edit: function (ev, cervejaria) {
       ev.preventDefault();
-      this.$set('cervejaria', cervejaria);
-      jQuery(this.$$.modal).modal('show');
+      // this.$set('cervejaria', cervejaria);
+      Vue.set(this, 'cervejaria', cervejaria);
+      jQuery(this.$els.modal).modal('show');
     },
 
     save: function(ev) {
       ev.preventDefault();
 
       // this.$http.post('url/save', cervejaria, function(response) {
-      //   jQuery(this.$$.modal).modal('hide');
+      //   jQuery(this.$els.modal).modal('hide');
       //   window.alert('Cervejaria salva, seu bebâdo');
       // });
       
-      jQuery(this.$$.modal).modal('hide');
+      jQuery(this.$els.modal).modal('hide');
       window.console.log(JSON.stringify(this.cervejaria));
       window.alert('Cervejaria salva, seu bebâdo');
     },
@@ -84,23 +85,22 @@ new Vue({
       var self = this;
       chunk    = _.chunk(listaCervejarias, self.pagination.perPage);
 
-      self.cervejarias.$set('paginated', chunk);
-      self.cervejarias.$set('listaCervejarias', chunk[0]);
+      Vue.set(self.cervejarias, 'paginated', chunk);  
+      Vue.set(self.cervejarias, 'listaCervejarias', chunk[0]);
 
-      self.pagination.$set('currentPage', 1);
-      self.pagination.$set('totalItems', listaCervejarias.length);
-      self.pagination.$set('totalPages', Math.ceil(listaCervejarias.length / self.pagination.perPage));
-      //Math.ceil arredondamento para o maior
-      self.pagination.$set('pageNumbers', _.range(1, self.pagination.totalPages+1));
+      Vue.set(self.pagination, 'currentPage', 1);  
+      Vue.set(self.pagination, 'totalItems', listaCervejarias.length);  
+      Vue.set(self.pagination, 'totalPages', Math.ceil(listaCervejarias.length / self.pagination.perPage));  
+      Vue.set(self.pagination, 'pageNumbers', _.range(1, self.pagination.totalPages+1));  
     },
 
     page: function(ev, page){
        ev.preventDefault();
        var self = this;
 
-       self.pagination.$set('currentPage', page);
+       Vue.set(self.pagination, 'currentPage', page);
+       Vue.set(self.cervejarias, 'listaCervejarias', self.cervejarias.paginated[page-1]);  
 
-      self.cervejarias.$set('listaCervejarias', self.cervejarias.paginated[page-1]);
     },
 
     next: function(ev){
@@ -113,10 +113,9 @@ new Vue({
         return false;
       }
 
-      self.pagination.$set('currentPage', self.pagination.currentPage+1);
+      Vue.set(self.pagination, 'currentPage', self.pagination.currentPage+1);
+      Vue.set(self.cervejarias, 'listaCervejarias', self.cervejarias.paginated[self.pagination.currentPage-1]);  
 
-      self.cervejarias.$set('listaCervejarias', self.cervejarias.paginated[self.pagination.currentPage-1]);
-    
     },
 
     previous: function(ev){
@@ -129,22 +128,24 @@ new Vue({
         return false;
       }
 
-      self.pagination.$set('currentPage', self.pagination.currentPage-1);
+      Vue.set(self.pagination, 'currentPage', self.pagination.currentPage-1);
 
-      self.cervejarias.$set('listaCervejarias', self.cervejarias.paginated[self.pagination.currentPage-1]);
+      Vue.set(self.cervejarias, 'listaCervejarias', self.cervejarias.paginated[self.pagination.currentPage-1]);  
+
     
     },
 
     doResetAll: function(){
       self = this;
 
-      self.interaction.$set('visibleColumns', ['name', 'last_mod']);
-      self.interaction.$set('columnsToFilter', []);
-      self.interaction.$set('filterTerm', '');
       // self.cervejarias.$set('listaCervejarias', self.cervejarias.todasCervejarias);
-      self.interaction.$set('openDetails', []);
-      self.interaction.$set('sortColumn', 'name');
-      self.interaction.$set('sortInverse', false);
+
+      Vue.set(self.interaction, 'visibleColumns', ['name', 'last_mod']);  
+      Vue.set(self.interaction, 'columnsToFilter', []);  
+      Vue.set(self.interaction, 'filterTerm', '');  
+      Vue.set(self.interaction, 'openDetails', []);  
+      Vue.set(self.interaction, 'sortColumn', 'name');  
+      Vue.set(self.interaction, 'sortInverse', 0);  
 
       self.setPaginationData(self.cervejarias.todasCervejarias);
 
@@ -184,7 +185,15 @@ new Vue({
 
       self.interaction.sortColumn = column;
 
-      self.interaction.$set('sortInverse', !self.interaction.sortInverse);
+      if (self.interaction.sortInverse == 0) 
+      {
+        Vue.set(self.interaction, 'sortInverse', -1);  
+      }
+      else
+      {
+        Vue.set(self.interaction, 'sortInverse', 0);  
+      }
+
     },
 
     doOpenDetails: function(ev, id){
@@ -214,10 +223,10 @@ new Vue({
       // });
 
         if(self.interaction.openDetails.length > 0){
-          self.interaction.$set('openDetails', []);
+          Vue.set(self.interaction, 'openDetails', []);  
         }
         else{
-          self.interaction.$set('openDetails', _.pluck(self.cervejarias.listaCervejarias, 'id'));
+          Vue.set(self.interaction, 'openDetails', _.pluck(self.cervejarias.listaCervejarias, 'id'));  
         }
       }
   },
@@ -227,16 +236,17 @@ new Vue({
 
     self.$http.get('http://beerapi.local/cervejarias', function (response)
     {
-      self.cervejarias.$set('todasCervejarias', response);
+
+      Vue.set(self.cervejarias, 'todasCervejarias', response);  
       
       self.setPaginationData(response);
     });
 
-    self.controls.select2 = jQuery(self.$$.columnsToFilterSelect).select2({
+    self.controls.select2 = jQuery(self.$els.columnsToFilterSelect).select2({
       placeholder: 'Selecione uma ou mais colunas para filtrar!'
     }).on('change', function() {
       // Here "this" is reference to CustomToFilterSelect
-      self.interaction.$set('columnsToFilter', jQuery(this).val());
+      Vue.set(self.interaction, 'columnsToFilter', jQuery(this).val());  
     });
   }
 
