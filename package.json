@@ -19,6 +19,7 @@
     "bootstrap": "^3.3.5",
     "font-awesome": "^4.4.0",
     "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "select2": "^4.0.0",
     "vue": "^0.12.16",
